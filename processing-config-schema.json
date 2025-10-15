@@ -53,22 +53,23 @@
         "opqtecc",
         "cerqual"
       ],
+      "layout": "select",
       "items": {
-        "type": "string"
-      },
-      "enum": [
-        "afnor",
-        "cequami",
-        "certibat",
-        "cnoa",
-        "opqibi",
-        "qualibat",
-        "qualifelec",
-        "qualitenr",
-        "lne",
-        "opqtecc",
-        "cerqual"
-      ]
+        "type": "string",
+        "enum": [
+          "afnor",
+          "cequami",
+          "certibat",
+          "cnoa",
+          "opqibi",
+          "qualibat",
+          "qualifelec",
+          "qualitenr",
+          "lne",
+          "opqtecc",
+          "cerqual"
+        ]
+      }
     },
     "syncWithOld": {
       "type": "boolean",
