@@ -27,14 +27,14 @@ exports.run = async ({ processingConfig, processingId, dir, axios, log, patchCon
     await log.info(`le jeu de donnée existe, id="${dataset.id}", title="${dataset.title}"`)
   }
 
-  for (const folder of processingConfig.folders) {
-    log.step(`Traitement du répertoire ${folder}`)
-    await fs.ensureDir(path.join(dir, folder))
-    if (processingConfig.syncWithOld) await syncWithOld(processingConfig, folder, axios, log)
+  for (const organism of processingConfig.organisms) {
+    log.step(`Traitement du répertoire ${organism}`)
+    await fs.ensureDir(path.join(dir, organism))
+    if (processingConfig.syncWithOld) await syncWithOld(processingConfig, organism, axios, log)
 
     if (processingConfig.updateFromDaily) {
-      const previousState = await dailyStateFromUrl(processingConfig.currentHistoryDataset, folder, true, axios, log)
-      const currentState = await dailyStateFromUrl(processingConfig.dailyDataset, folder, false, axios, log)
+      const previousState = await dailyStateFromUrl(processingConfig.currentHistoryDataset, organism, true, axios, log)
+      const currentState = await dailyStateFromUrl(processingConfig.dailyDataset, organism, false, axios, log)
       const { stats, bulk } = await require('./lib/diff-bulk')(previousState, currentState, processingConfig)
       await log.info(`enregistrement des modifications : ouvertures=${stats.created}, fermetures=${stats.closed}, modifications=${stats.updated}, inchangés=${stats.unmodified}`)
       while (bulk.length) {
