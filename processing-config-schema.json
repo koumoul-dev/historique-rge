@@ -1,6 +1,5 @@
 {
   "type": "object",
-  "x-display": "tabs",
   "properties": {
     "oldHistoryDataset": {
       "title": "Ancien jeu de données historique",
@@ -15,7 +14,7 @@
       }
     },
     "currentHistoryDataset": {
-      "title": "Ancien jeu de données historique",
+      "title": "Jeu de données historique actuel",
       "type": "object",
       "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&{context.ownerFilter}",
       "x-itemsProp": "results",
@@ -55,21 +54,21 @@
         "cerqual"
       ],
       "items": {
-        "type": "string",
-        "enum": [
-          "afnor",
-          "cequami",
-          "certibat",
-          "cnoa",
-          "opqibi",
-          "qualibat",
-          "qualifelec",
-          "qualitenr",
-          "lne",
-          "opqtecc",
-          "cerqual"
-        ]
-      }
+        "type": "string"
+      },
+      "enum": [
+        "afnor",
+        "cequami",
+        "certibat",
+        "cnoa",
+        "opqibi",
+        "qualibat",
+        "qualifelec",
+        "qualitenr",
+        "lne",
+        "opqtecc",
+        "cerqual"
+      ]
     },
     "syncWithOld": {
       "type": "boolean",
