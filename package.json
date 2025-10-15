@@ -2,7 +2,8 @@
   "name": "@koumoul/historique-rge",
   "version": "0.2.4",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
     "test": "mocha --exit",
     "lint": "eslint .",
