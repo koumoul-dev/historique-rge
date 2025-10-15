@@ -1,0 +1,90 @@
+{
+  "type": "object",
+  "x-display": "tabs",
+  "properties": {
+    "oldHistoryDataset": {
+      "title": "Ancien jeu de données historique",
+      "type": "object",
+      "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&{context.ownerFilter}",
+      "x-itemsProp": "results",
+      "x-itemTitle": "title",
+      "x-itemKey": "id",
+      "properties": {
+        "id": { "type": "string", "title": "Identifiant" },
+        "title": { "type": "string", "title": "Titre" }
+      }
+    },
+    "currentHistoryDataset": {
+      "title": "Ancien jeu de données historique",
+      "type": "object",
+      "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&{context.ownerFilter}",
+      "x-itemsProp": "results",
+      "x-itemTitle": "title",
+      "x-itemKey": "id",
+      "properties": {
+        "id": { "type": "string", "title": "Identifiant" },
+        "title": { "type": "string", "title": "Titre" }
+      }
+    },
+    "dailyDataset": {
+      "title": "Jeu de données de la liste des entreprises",
+      "type": "object",
+      "x-fromUrl": "{context.dataFairUrl}/api/v1/datasets?q={q}&select=id,title&{context.ownerFilter}",
+      "x-itemsProp": "results",
+      "x-itemTitle": "title",
+      "x-itemKey": "id",
+      "properties": {
+        "id": { "type": "string", "title": "Identifiant" },
+        "title": { "type": "string", "title": "Titre" }
+      }
+    },
+    "organisms": {
+      "type": "array",
+      "title": "Organismes",
+      "default": [
+        "afnor",
+        "cequami",
+        "certibat",
+        "cnoa",
+        "opqibi",
+        "qualibat",
+        "qualifelec",
+        "qualitenr",
+        "lne",
+        "opqtecc",
+        "cerqual"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "afnor",
+          "cequami",
+          "certibat",
+          "cnoa",
+          "opqibi",
+          "qualibat",
+          "qualifelec",
+          "qualitenr",
+          "lne",
+          "opqtecc",
+          "cerqual"
+        ]
+      }
+    },
+    "syncWithOld": {
+      "type": "boolean",
+      "title": "Synchroniser avec l'ancien historique",
+      "default": false
+    },
+    "updateFromDaily": {
+      "type": "boolean",
+      "title": "Synchroniser avec la liste des entreprises actuelle",
+      "default": false
+    },
+    "forceLinkDatesUpdate": {
+      "type": "boolean",
+      "title": "Forcer la mise à jour des dates de lien",
+      "default": false
+    }
+  }
+}

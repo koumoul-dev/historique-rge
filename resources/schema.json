@@ -1,0 +1,139 @@
+[
+  {
+    "key": "siret",
+    "type": "string",
+    "x-refersTo": "http://www.datatourisme.fr/ontology/core/1.0/#siret",
+    "title": "SIRET"
+  },
+  {
+    "key": "nom_entreprise",
+    "type": "string",
+    "x-refersTo": "http://www.w3.org/2000/01/rdf-schema#label",
+    "title": "Nom de l’entreprise"
+  },
+  {
+    "key": "adresse",
+    "type": "string",
+    "x-refersTo": "http://schema.org/address",
+    "title": "Adresse de l'entreprise"
+  },
+  {
+    "key": "code_postal",
+    "type": "string",
+    "x-refersTo": "http://schema.org/postalCode",
+    "title": "Code postal"
+  },
+  {
+    "key": "commune",
+    "type": "string",
+    "x-refersTo": "http://schema.org/City",
+    "title": "Commune"
+  },
+  {
+    "key": "latitude",
+    "type": "number",
+    "x-refersTo": "http://schema.org/latitude",
+    "title": "Latitude"
+  },
+  {
+    "key": "longitude",
+    "type": "number",
+    "x-refersTo": "http://schema.org/longitude",
+    "title": "Longitude"
+  },
+  {
+    "key": "telephone",
+    "type": "string",
+    "x-refersTo": "https://www.w3.org/2006/vcard/ns#tel",
+    "title": "Téléphone"
+  },
+  {
+    "key": "email",
+    "type": "string",
+    "x-refersTo": "https://www.w3.org/2006/vcard/ns#email",
+    "title": "E-mail"
+  },
+  {
+    "key": "site_internet",
+    "type": "string",
+    "title": "Site internet"
+  },
+  {
+    "key": "code_qualification",
+    "type": "string",
+    "title": "Code qualification"
+  },
+  {
+    "key": "nom_qualification",
+    "type": "string",
+    "title": "Nom de la qualification"
+  },
+  {
+    "key": "date_debut",
+    "type": "string",
+    "format": "date",
+    "x-refersTo": "https://schema.org/startDate",
+    "title": "Date de début"
+  },
+  {
+    "key": "date_fin",
+    "type": "string",
+    "format": "date",
+    "x-refersTo": "https://schema.org/endDate",
+    "title": "Date de fin"
+  },
+  {
+    "key": "lien_date_debut",
+    "type": "string",
+    "format": "date",
+    "title": "Date de début (lien qualification)"
+  },
+  {
+    "key": "lien_date_fin",
+    "type": "string",
+    "format": "date",
+    "title": "Date de fin (lien qualification)"
+  },
+  {
+    "key": "url_qualification",
+    "type": "string",
+    "x-refersTo": "https://schema.org/WebPage",
+    "title": "URL qualification"
+  },
+  {
+    "key": "nom_certificat",
+    "type": "string",
+    "title": "Libellé du certificat"
+  },
+  {
+    "key": "domaine",
+    "type": "string",
+    "title": "Domaine de travaux"
+  },
+  {
+    "key": "meta_domaine",
+    "type": "string",
+    "title": "Méta domaine"
+  },
+  {
+    "key": "organisme",
+    "type": "string",
+    "title": "Organisme"
+  },
+  {
+    "key": "particulier",
+    "type": "boolean",
+    "title": "Travaille pour les particuliers"
+  },
+  {
+    "key": "motif_insertion",
+    "type": "string",
+    "title": "Motif d'insertion",
+    "separator": ";"
+  },
+  {
+    "key": "traitement_termine",
+    "type": "boolean",
+    "title": "Traitement terminé"
+  }
+]
