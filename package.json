@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit",
-    "lint": "eslint --ignore-path .gitignore .",
+    "lint": "eslint .",
     "lint-fix": "eslint --ignore-path .gitignore --fix .",
     "proto": "pbf resources/history.proto > resources/history-proto.js"
   },
@@ -18,9 +18,9 @@
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "config": "^3.3.6",
-    "eslint": "^7.18.0",
+    "eslint": "^9.25.1",
     "mocha": "^8.2.1",
-    "standard": "^16.0.3"
+    "neostandard": "^0.12.1"
   },
   "dependencies": {
     "fs-extra": "^9.1.0",

@@ -1,12 +1,14 @@
 // main execution method
-const dailyStateFromUrl = require('./lib/daily-state')
-const syncWithOld = require('./lib/sync-with-old')
+import dailyStateFromUrl from './lib/daily-state.js'
+import syncWithOld from './lib/sync-with-old.js'
+import diffBulk from './lib/diff-bulk.js'
+import fs from 'fs-extra'
+import path from 'path'
+import datasetSchema from './resources/schema.json' with { type: 'json' }
 
-exports.run = async ({ processingConfig, processingId, dir, axios, log, patchConfig }) => {
-  const fs = require('fs-extra')
-  const path = require('path')
+console.log(datasetSchema)
 
-  const datasetSchema = require('./resources/schema.json')
+export const run = async ({ processingConfig, processingId, dir, axios, log, patchConfig }) => {
   let dataset
   if (processingConfig.datasetMode === 'create') {
     await log.step('Création du jeu de données')
@@ -35,7 +37,7 @@ exports.run = async ({ processingConfig, processingId, dir, axios, log, patchCon
     if (processingConfig.updateFromDaily) {
       const previousState = await dailyStateFromUrl(processingConfig.currentHistoryDataset, organism, true, axios, log)
       const currentState = await dailyStateFromUrl(processingConfig.dailyDataset, organism, false, axios, log)
-      const { stats, bulk } = await require('./lib/diff-bulk')(previousState, currentState, processingConfig)
+      const { stats, bulk } = await diffBulk(previousState, currentState, processingConfig)
       await log.info(`enregistrement des modifications : ouvertures=${stats.created}, fermetures=${stats.closed}, modifications=${stats.updated}, inchangés=${stats.unmodified}`)
       while (bulk.length) {
         const lines = bulk.splice(0, 1000)
