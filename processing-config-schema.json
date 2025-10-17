@@ -67,7 +67,9 @@
           "qualitenr",
           "lne",
           "opqtecc",
-          "cerqual"
+          "cerqual",
+          "Non renseigné",
+          "Inconnu"
         ]
       }
     },

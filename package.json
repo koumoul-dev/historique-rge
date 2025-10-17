@@ -5,7 +5,8 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test": "mocha --exit",
+    "test-base": "NODE_ENV=test node --experimental-strip-types --test-force-exit --test-concurrency=1 --test --test-reporter=spec --test-reporter-destination=stdout",
+    "test": "npm run test-base test/*.ts",
     "lint": "eslint .",
     "lint-fix": "eslint --ignore-path .gitignore --fix .",
     "proto": "pbf resources/history.proto > resources/history-proto.js"
@@ -16,12 +17,14 @@
     "data-fair-processings-plugin"
   ],
   "devDependencies": {
+    "@data-fair/lib-processing-dev": "^0.2.0",
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "config": "^3.3.6",
     "eslint": "^9.25.1",
     "mocha": "^8.2.1",
-    "neostandard": "^0.12.1"
+    "neostandard": "^0.12.1",
+    "ws": "^8.18.3"
   },
   "dependencies": {
     "fs-extra": "^9.1.0",
