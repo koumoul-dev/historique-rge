@@ -15,8 +15,14 @@ export const run = async ({ processingConfig, axios, log }) => {
       await log.info(`enregistrement des modifications : ouvertures=${stats.created}, fermetures=${stats.closed}, modifications=${stats.updated}, inchangés=${stats.unmodified}`)
       while (bulk.length) {
         const lines = bulk.splice(0, 1000)
-        const res = await axios.post(`api/v1/datasets/${processingConfig.currentHistoryDataset.id}/_bulk_lines`, lines)
-        if (res.data.nbErrors) log.error(`${res.data.nbErrors} échecs sur ${lines.length} lignes à insérer`, res.data.errors)
+        const result = (await axios.post(`api/v1/datasets/${processingConfig.currentHistoryDataset.id}/_bulk_lines`, lines)).data
+        if (result.nbErrors) {
+          await log.error(`${result.nbErrors} échecs sur ${lines.length} lignes à insérer`)
+          for (const error of result.errors) {
+            await log.error(JSON.stringify(error))
+            await log.error(JSON.stringify(lines[error.line]))
+          }
+        }
       }
     }
   }
