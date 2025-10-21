@@ -24,8 +24,8 @@ describe('Hello world processing', () => {
         organisms: [
           'qualifelec'
         ],
-        syncWithOld: true,
-        updateFromDaily: false,
+        syncWithOld: false,
+        updateFromDaily: true,
         forceLinkDatesUpdate: false,
         oldHistoryDataset: {
           title: 'Historique RGE - old',
@@ -34,6 +34,10 @@ describe('Hello world processing', () => {
         currentHistoryDataset: {
           title: 'Historique RGE - new',
           id: '9nj6ed-4re2j95njni3qkne7'
+        },
+        dailyDataset: {
+          title: 'liste des entreprises rge qualifelec',
+          id: '9sw6c9d5aoftbwozl6lqtjy7'
         }
       },
     }, config, false, false)
