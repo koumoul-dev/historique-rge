@@ -25,6 +25,10 @@ export const run = async ({ processingConfig, axios, log }) => {
               await log.error(JSON.stringify(error))
               await log.error(JSON.stringify(lines[error.line]))
             }
+          } else if (result.response) {
+            console.log(result.response.data)
+            console.log(result.response.status)
+            console.log(result.response.headers)
           } else {
             await log.error(JSON.stringify(result))
           }
