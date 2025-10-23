@@ -22,7 +22,7 @@ describe('Hello world processing', () => {
       pluginConfig: {},
       processingConfig: {
         organisms: [
-          'qualifelec'
+          'opqtecc'
         ],
         syncWithOld: false,
         updateFromDaily: true,
@@ -36,8 +36,8 @@ describe('Hello world processing', () => {
           id: '9nj6ed-4re2j95njni3qkne7'
         },
         dailyDataset: {
-          title: 'liste des entreprises rge qualifelec',
-          id: '9sw6c9d5aoftbwozl6lqtjy7'
+          title: 'liste des entreprises rge opqtecc',
+          id: '200yruhxuh0qisjgfzjdum7x'
         }
       },
     }, config, false, false)

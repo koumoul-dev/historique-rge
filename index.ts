@@ -16,13 +16,17 @@ export const run = async ({ processingConfig, axios, log }) => {
       while (bulk.length) {
         const lines = bulk.splice(0, 1000)
         try {
-          const result = (await axios.post(`api/v1/datasets/${processingConfig.currentHistoryDataset.id}/_bulk_lines`, lines)).data
+          await axios.post(`api/v1/datasets/${processingConfig.currentHistoryDataset.id}/_bulk_lines`, lines)
         } catch (error) {
-          const result = error.data
-          await log.error(`${result.nbErrors} échecs sur ${lines.length} lignes à insérer`)
-          for (const error of result.errors) {
-            await log.error(JSON.stringify(error))
-            await log.error(JSON.stringify(lines[error.line]))
+          const result = error.data || error
+          if (result.nbErrors) {
+            await log.error(`${result.nbErrors} échecs sur ${lines.length} lignes à insérer`)
+            for (const error of result.errors) {
+              await log.error(JSON.stringify(error))
+              await log.error(JSON.stringify(lines[error.line]))
+            }
+          } else {
+            await log.error(JSON.stringify(result))
           }
         }
       }
