@@ -22,10 +22,10 @@ describe('Hello world processing', () => {
       pluginConfig: {},
       processingConfig: {
         organisms: [
-          'opqtecc'
+          'qualifelec'
         ],
-        syncWithOld: false,
-        updateFromDaily: true,
+        syncWithOld: true,
+        updateFromDaily: false,
         forceLinkDatesUpdate: false,
         oldHistoryDataset: {
           title: 'Historique RGE - old',
