@@ -5,7 +5,7 @@ import diffBulk from './lib/diff-bulk.js'
 
 export const run = async ({ processingConfig, axios, log }) => {
   for (const organism of processingConfig.organisms) {
-    log.step(`Traitement du répertoire ${organism}`)
+    await log.step(`Traitement du répertoire ${organism}`)
     if (processingConfig.syncWithOld) await syncWithOld(processingConfig, organism, axios, log)
 
     if (processingConfig.updateFromDaily) {
