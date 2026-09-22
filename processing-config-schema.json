@@ -1,5 +1,122 @@
 {
   "type": "object",
   "title": "Processing config",
-  "properties": {}
+  "layout": "tabs",
+  "allOf": [
+    {
+      "title": "Datasets",
+      "x-i18n-title": { "fr": "Jeux de données" },
+      "required": ["dataset", "sourceDatasets"],
+      "properties": {
+        "dataset": {
+          "type": "object",
+          "title": "History dataset",
+          "x-i18n-title": { "fr": "Jeu de données historique" },
+          "description": "The editable dataset \"Historique des entreprises RGE\", created beforehand with the primary key organisme, siret, code_qualification, date_debut.",
+          "x-i18n-description": { "fr": "Le jeu de données éditable « Historique des entreprises RGE », créé au préalable avec la clé primaire organisme, siret, code_qualification, date_debut." },
+          "layout": {
+            "getItems": {
+              "url": "${context.dataFairUrl}/api/v1/datasets?select=id,title&size=50&${context.ownerFilter}&raw=true",
+              "qSearchParam": "q",
+              "itemsResults": "data.results",
+              "itemTitle": "item.title",
+              "itemKey": "item.id"
+            }
+          },
+          "required": ["id"],
+          "properties": {
+            "id": { "type": "string", "title": "Identifier", "x-i18n-title": { "fr": "Identifiant" } },
+            "title": { "type": "string", "title": "Title", "x-i18n-title": { "fr": "Titre" } }
+          }
+        },
+        "sourceDatasets": {
+          "type": "array",
+          "title": "Organism datasets",
+          "x-i18n-title": { "fr": "Jeux de données de l'organisme" },
+          "description": "The datasets filled by the organism (RGE companies, foreign companies). All their lines go into the history.",
+          "x-i18n-description": { "fr": "Les jeux de données alimentés par l'organisme (entreprises RGE, entreprises étrangères). Toutes leurs lignes vont dans l'historique." },
+          "minItems": 1,
+          "layout": {
+            "comp": "list",
+            "listEditMode": "inline",
+            "messages": { "addItem": "Add a dataset" },
+            "x-i18n-messages": { "fr": { "addItem": "Ajouter un jeu de données" } }
+          },
+          "items": {
+            "type": "object",
+            "title": "Source dataset",
+            "layout": {
+              "getItems": {
+                "url": "${context.dataFairUrl}/api/v1/datasets?select=id,title&size=50&${context.ownerFilter}&raw=true",
+                "qSearchParam": "q",
+                "itemsResults": "data.results",
+                "itemTitle": "item.title",
+                "itemKey": "item.id"
+              }
+            },
+            "required": ["id"],
+            "properties": {
+              "id": { "type": "string", "title": "Identifier", "x-i18n-title": { "fr": "Identifiant" } },
+              "title": { "type": "string", "title": "Title", "x-i18n-title": { "fr": "Titre" } }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Organism",
+      "x-i18n-title": { "fr": "Organisme" },
+      "required": ["organisme", "mode"],
+      "properties": {
+        "organisme": {
+          "type": "string",
+          "title": "Qualification organism",
+          "x-i18n-title": { "fr": "Organisme de qualification" },
+          "description": "Written in the organisme column and used to select the lines of the history handled by this processing.",
+          "x-i18n-description": { "fr": "Écrit dans la colonne organisme et utilisé pour sélectionner les lignes de l'historique gérées par ce traitement." },
+          "layout": { "comp": "autocomplete" },
+          "enum": [
+            "afnor",
+            "cequami",
+            "certibat",
+            "cnoa",
+            "opqibi",
+            "qualibat",
+            "qualifelec",
+            "qualitenr",
+            "lne",
+            "opqtecc",
+            "cerqual",
+            "qualiclimafroid"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "title": "Update mode",
+          "x-i18n-title": { "fr": "Mode de mise à jour" },
+          "description": "Auto: incremental when the source is an editable dataset with line history and the previous run is recent, full otherwise.",
+          "x-i18n-description": { "fr": "Auto : incrémental quand la source est un jeu éditable avec historisation des lignes et que le run précédent est récent, complet sinon." },
+          "default": "auto",
+          "layout": { "comp": "select" },
+          "oneOf": [
+            { "const": "auto", "title": "Auto", "x-i18n-title": { "fr": "Automatique" } },
+            { "const": "full", "title": "Full", "x-i18n-title": { "fr": "Complet" } },
+            { "const": "incremental", "title": "Incremental", "x-i18n-title": { "fr": "Incrémental" } }
+          ]
+        },
+        "state": {
+          "type": "object",
+          "title": "State",
+          "layout": "none",
+          "additionalProperties": {
+            "type": "object",
+            "title": "Source state",
+            "properties": {
+              "cursor": { "type": "string", "title": "Cursor" }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
