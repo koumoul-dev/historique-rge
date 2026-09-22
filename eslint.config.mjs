@@ -1,11 +1,8 @@
 import neostandard from 'neostandard'
+import dfLibRecommended from '@data-fair/lib-utils/eslint/recommended.js'
 
 export default [
-  { ignores: ['**/.type/'] },
-  ...neostandard({ ts: true, noJsx: true }),
-  {
-    rules: {
-      'no-undef': 'off' // taken care of by typescript
-    }
-  }
+  { ignores: ['config/*', '**/.type/', 'node_modules/', 'docs/'] },
+  ...dfLibRecommended,
+  ...neostandard({ ts: true })
 ]

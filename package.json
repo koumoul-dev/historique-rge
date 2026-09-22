@@ -1,33 +1,51 @@
 {
   "name": "@koumoul/historique-rge",
   "version": "0.4.3",
-  "description": "",
+  "description": "data-fair processing: keeps the RGE companies history dataset in sync with the datasets of one qualification organism",
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test-base": "NODE_ENV=test node --experimental-strip-types --test-force-exit --test-concurrency=1 --test --test-reporter=spec --test-reporter-destination=stdout",
-    "test": "npm run test-base test/*.ts",
     "lint": "eslint .",
-    "lint-fix": "eslint --ignore-path .gitignore --fix .",
-    "proto": "pbf resources/history.proto > resources/history-proto.js"
+    "lint-fix": "eslint --fix .",
+    "prepare": "husky || true",
+    "build-types": "export NODE_OPTIONS='--experimental-strip-types' && df-build-types ./config && df-build-types ./types",
+    "test-base": "NODE_ENV=test node --experimental-strip-types --test-force-exit --test-concurrency=1 --test --test-reporter=spec --test-reporter-destination=stdout",
+    "test": "npm run test-base test-it/*.ts"
+  },
+  "imports": {
+    "#config": "./lib/config.ts",
+    "#types/*": "./types/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/koumoul-dev/historique-rge.git"
   },
   "author": "Koumoul <contact@koumoul.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/koumoul-dev/historique-rge/issues"
+  },
+  "homepage": "https://github.com/koumoul-dev/historique-rge#readme",
   "keywords": [
     "data-fair-processings-plugin"
   ],
+  "files": [
+    "processing-config-schema.json",
+    "./lib/**/*",
+    "./resources/**/*"
+  ],
   "devDependencies": {
-    "@data-fair/lib-processing-dev": "^0.2.0",
-    "axios": "^0.21.1",
-    "chalk": "^4.1.0",
-    "config": "^3.3.6",
-    "eslint": "^9.25.1",
-    "mocha": "^8.2.1",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@data-fair/lib-common-types": "^1.20.6",
+    "@data-fair/lib-processing-dev": "^0.3.0",
+    "@data-fair/lib-types-builder": "^1.7.0",
+    "@data-fair/lib-utils": "^1.11.0",
+    "axios": "^1.7.0",
+    "config": "^4.4.1",
+    "eslint": "^9.26.0",
+    "husky": "^9.1.7",
     "neostandard": "^0.12.1",
-    "ws": "^8.18.3"
-  },
-  "dependencies": {
-    "fs-extra": "^9.1.0",
-    "moment": "^2.29.1"
+    "typescript": "^5.8.3"
   }
 }
