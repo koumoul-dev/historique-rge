@@ -23,7 +23,7 @@ describe('config schema and prepare', () => {
 
   it('rejects a config without source dataset', async () => {
     await assert.rejects(
-      plugin.prepare({ processingConfig: { ...validConfig, sourceDatasets: [] }, secrets: {} }),
+      plugin.prepare({ processingConfig: { ...validConfig, sourceDatasets: [] as unknown as ProcessingConfig['sourceDatasets'] }, secrets: {} }),
       /at least one source dataset/
     )
   })

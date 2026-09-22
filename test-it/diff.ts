@@ -144,6 +144,26 @@ describe('diff', () => {
     assert.equal(stats.unchanged, 1)
   })
 
+  it('treats particulier false as absent and compares coordinates by value, like the legacy flow', () => {
+    const { ops, stats } = diff(prev({ current: hist({ particulier: false, latitude: 48.8 }) }), cur(src({ particulier: undefined, latitude: '48.80' })), org, J)
+    assert.equal(ops.length, 0)
+    assert.equal(stats.unchanged, 1)
+  })
+
+  it('never compares siret or code_postal numerically, leading zeros matter', () => {
+    const { stats } = diff(prev({ current: hist({ siret: '01234' }) }), cur(src({ siret: '1234' })), org, J)
+    assert.deepEqual(stats, { created: 1, closed: 1, updated: 0, reopened: 0, deleted: 0, unchanged: 0 })
+    const postal = diff(prev({ current: hist({ code_postal: '01000' }) }), cur(src({ code_postal: '1000' })), org, J)
+    assert.equal(postal.stats.closed, 1)
+  })
+
+  it('omits particulier false on creation and removes it with null in a patch', () => {
+    const created = diff(new Map(), cur(src({ particulier: false })), org, J).ops[0] as Record<string, unknown>
+    assert.equal('particulier' in created, false)
+    const { ops } = diff(prev({ current: hist({ date_debut: J, particulier: true }) }), cur(src({ particulier: false })), org, J)
+    assert.equal((ops[0] as Record<string, unknown>).particulier, null)
+  })
+
   it('closes an older line that disappeared', () => {
     const { ops, stats } = diff(prev({ current: hist() }), cur(), org, J)
     assert.equal(stats.closed, 1)

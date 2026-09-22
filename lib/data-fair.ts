@@ -62,10 +62,11 @@ export const waitForIndexed = async (axios: AxiosInstance, id: string, log: LogF
 
 const chunkSize = 1000
 
-/** True if the given value looks like an axios error carrying a bulk_lines summary body. */
-const isBulkErrorResponse = (err: unknown): err is { response: { data: BulkSummary } } => {
-  const data = (err as { response?: { data?: unknown } })?.response?.data
-  return !!data && Array.isArray((data as BulkSummary).errors)
+/** The bulk_lines summary carried by an axios error, or by a bare response (lib-processing-dev rejects with it directly). */
+const bulkErrorSummary = (err: unknown): BulkSummary | undefined => {
+  const e = err as { response?: { data?: unknown }, data?: unknown } | undefined
+  const data = e?.response?.data ?? e?.data
+  return (!!data && Array.isArray((data as BulkSummary).errors)) ? data as BulkSummary : undefined
 }
 
 /** Sends the operations by chunks. A 404 on patch/delete is a line already handled by a previous run: warn and go on. */
@@ -82,8 +83,9 @@ export const bulkLines = async (axios: AxiosInstance, id: string, ops: BulkOp[],
       summary = (await axios.post<BulkSummary>(`api/v1/datasets/${id}/_bulk_lines`, chunk)).data
     } catch (err: unknown) {
       // data-fair answers 400 with the same summary when every line was rejected
-      if (!isBulkErrorResponse(err)) throw err
-      summary = err.response.data
+      const rejected = bulkErrorSummary(err)
+      if (!rejected) throw err
+      summary = rejected
     }
     result.nbOk += summary.nbOk
     result.nbNotModified += summary.nbNotModified

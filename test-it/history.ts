@@ -43,6 +43,23 @@ describe('history', () => {
     assert.ok(calls.every(c => c.includes('organisme_eq=o')))
   })
 
+  it('keeps a current line whose date_fin is yesterday out of the lines closed today', async () => {
+    // the fake filters on both parameters, like data-fair: the closed query must include traitement_termine_eq=true
+    const lines = [
+      { siret: '1', code_qualification: 'c', organisme: 'o', date_debut: '2025-01-01', date_fin: '2026-09-20', traitement_termine: false },
+      { siret: '2', code_qualification: 'c', organisme: 'o', date_debut: '2025-01-01', date_fin: '2026-09-20', traitement_termine: true }
+    ]
+    const axios = fakeAxios({
+      'GET /api/v1/datasets/h/lines': (q) => {
+        const results = lines.filter(l => String(l.traitement_termine) === q.get('traitement_termine_eq') && (!q.get('date_fin_eq') || l.date_fin === q.get('date_fin_eq')))
+        return { total: results.length, results }
+      }
+    })
+    const state = await readHistoryState(axios, 'h', 'o', '2026-09-21', noopLog, () => false)
+    assert.deepEqual(state.get('1|c'), { current: lines[0] })
+    assert.deepEqual(state.get('2|c'), { closedToday: lines[1] })
+  })
+
   it('restricts the reads to batches of sirets when given', async () => {
     const calls: string[] = []
     const axios = fakeAxios({ 'GET /api/v1/datasets/h/lines': () => ({ total: 0, results: [] }) }, calls)

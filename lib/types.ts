@@ -6,6 +6,9 @@ export const sourceKeys = [
 ] as const
 export type SourceKey = typeof sourceKeys[number]
 
+// optional in the ADEME file format: a file upload leaving one of them empty drops the column from the dataset
+export const optionalSourceKeys: readonly SourceKey[] = ['telephone', 'email', 'site_internet']
+
 // a change on one of these opens a new history line
 export const comparedKeys: readonly SourceKey[] = [
   'siret', 'nom_entreprise', 'adresse', 'code_postal', 'commune', 'latitude', 'longitude',

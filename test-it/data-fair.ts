@@ -75,6 +75,17 @@ describe('data-fair helpers', () => {
     assert.ok(messages.some(m => m.level === 'error' && m.msg.includes('doit être une chaîne')))
   })
 
+  it('reads the summary of a rejection shaped like a bare response, as lib-processing-dev rejects', async () => {
+    const axios = fakeAxios({
+      'POST /api/v1/datasets/h/_bulk_lines': () => {
+        throw Object.assign(new Error('Request failed'), { status: 400, data: { nbOk: 0, nbNotModified: 0, nbErrors: 1, errors: [{ line: 0, error: 'doit être une chaîne', status: 400 }] } })
+      }
+    })
+    const { log, messages } = recordingLog()
+    await assert.rejects(bulkLines(axios, 'h', [{ _action: 'delete', organisme: 'o', siret: '1', code_qualification: 'c', date_debut: '2026-01-01' }], log, () => false), /1 line\(s\) rejected/)
+    assert.ok(messages.some(m => m.level === 'error' && m.msg.includes('doit être une chaîne')))
+  })
+
   it('does not upload once stopped', async () => {
     let posted = 0
     const axios = fakeAxios({ 'POST /api/v1/datasets/h/_bulk_lines': () => { posted++; return { nbOk: 1, nbNotModified: 0, nbErrors: 0, errors: [] } } })

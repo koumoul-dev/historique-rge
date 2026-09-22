@@ -4,13 +4,22 @@ import { dayBefore } from './dates.ts'
 
 export type DiffStats = { created: number, closed: number, updated: number, reopened: number, deleted: number, unchanged: number }
 
-const norm = (value: unknown): string => (value === undefined || value === null) ? '' : String(value)
+// only the coordinates are compared by value: siret and code_postal keep their leading zeros
+const numericKeys: readonly SourceKey[] = ['latitude', 'longitude']
+
+// the legacy flow compared with (a || '') !== (b || ''): false counts as empty
+const norm = (value: unknown, key?: SourceKey): string => {
+  if (value === undefined || value === null || value === false) return ''
+  const str = String(value)
+  if (key && numericKeys.includes(key) && str.trim() !== '' && Number.isFinite(Number(str))) return String(Number(str))
+  return str
+}
 
 // a patch removes an emptied/missing field with null instead of dropping the key
 const orNull = (value: unknown): unknown => norm(value) === '' ? null : value
 
 const changedKeys = (a: SourceLine, b: SourceLine, keys: readonly SourceKey[]): SourceKey[] =>
-  keys.filter(k => norm(a[k]) !== norm(b[k]))
+  keys.filter(k => norm(a[k], k) !== norm(b[k], k))
 
 // values written on a new line: empty values are simply absent
 const sourceValues = (line: SourceLine): Partial<SourceLine> => {

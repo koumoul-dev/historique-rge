@@ -34,6 +34,13 @@ describe('revisions', () => {
     assert.equal(res.covered, false)
   })
 
+  it('rejects a deleted revision without the primary key fields', async () => {
+    const axios = fakeAxios({
+      'GET /api/v1/datasets/s/revisions': () => ({ total: 1, results: [{ _id: 'id-a', _i: 1, _updatedAt: '2026-09-21T11:00:00.000Z', _deleted: true, code_qualification: 'c' }] })
+    })
+    await assert.rejects(readDeletedSince(axios, 's', '2026-09-21T09:00:00.000Z', noopLog, () => false), /deleted revision without siret\/code_qualification in s/)
+  })
+
   it('treats an empty revisions collection as uncovered', async () => {
     const axios = fakeAxios({ 'GET /api/v1/datasets/s/revisions': () => ({ total: 0, results: [] }) })
     const res = await readDeletedSince(axios, 's', '2026-09-21T09:00:00.000Z', noopLog, () => false)

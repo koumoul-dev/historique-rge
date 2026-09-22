@@ -15,16 +15,20 @@ const now = '2026-09-21T10:00:00.000Z'
 const srcLine = (siret: string, over: Record<string, unknown> = {}) => ({ siret, code_qualification: 'c', nom_entreprise: 'N' + siret, lien_date_debut: '2025-01-01', lien_date_fin: '2027-01-01', ...over })
 const histLine = (siret: string, over: Record<string, unknown> = {}) => ({ ...srcLine(siret), organisme: 'qualibat', date_debut: '2025-01-01', date_fin: '2027-01-01', traitement_termine: false, ...over })
 
-type Setup = { source?: Record<string, unknown>, sourceLines?: unknown[], revisions?: unknown[], history?: unknown[], closedToday?: unknown[] }
+type Setup = { source?: Record<string, unknown>, sourceLines?: unknown[], revisions?: unknown[], secondSourceLines?: unknown[], history?: unknown[], closedToday?: unknown[] }
 
 const setup = (s: Setup) => {
   const posted: unknown[][] = []
   const patches: unknown[] = []
   const routes: Record<string, FakeRoute> = {
     'GET /api/v1/datasets/h': () => ({ id: 'h', title: 'History', isRest: true, schema: historySchema, primaryKey: pk, dataUpdatedAt: now, finalizedAt: now }),
-    'GET /api/v1/datasets/s': () => ({ id: 's', title: 'Source', isRest: true, schema: sourceKeys.map(key => ({ key })), rest: { history: true }, dataUpdatedAt: now, finalizedAt: now, ...s.source }),
+    'GET /api/v1/datasets/s': () => ({ id: 's', title: 'Source', isRest: true, schema: sourceKeys.map(key => ({ key })), rest: { history: true }, primaryKey: ['siret', 'code_qualification'], dataUpdatedAt: now, finalizedAt: now, ...s.source }),
     'GET /api/v1/datasets/s/lines': () => ({ total: (s.sourceLines ?? []).length, results: s.sourceLines ?? [] }),
     'GET /api/v1/datasets/s/revisions': () => ({ total: (s.revisions ?? []).length, results: s.revisions ?? [] }),
+    // an optional second source with the same settings, whose revisions cover any window
+    'GET /api/v1/datasets/s2': () => ({ id: 's2', title: 'Source 2', isRest: true, schema: sourceKeys.map(key => ({ key })), rest: { history: true }, primaryKey: ['siret', 'code_qualification'], dataUpdatedAt: now, finalizedAt: now }),
+    'GET /api/v1/datasets/s2/lines': () => ({ total: (s.secondSourceLines ?? []).length, results: s.secondSourceLines ?? [] }),
+    'GET /api/v1/datasets/s2/revisions': () => ({ total: 1, results: [{ _id: 'r0', _updatedAt: '2026-09-20T00:00:00.000Z', siret: '0', code_qualification: 'c' }] }),
     'GET /api/v1/datasets/h/lines': (q) => {
       if (q.get('size') === '0') return { total: (s.history ?? []).length, results: [] }
       const results = q.get('traitement_termine_eq') === 'false' ? (s.history ?? []) : (s.closedToday ?? [])
@@ -89,6 +93,26 @@ describe('execute', () => {
     const { context, posted } = setup({ sourceLines: [srcLine('1'), srcLine('1')] })
     await assert.rejects(run(context()), /duplicate key/)
     assert.equal(posted.length, 0)
+  })
+
+  it('fails before writing on a duplicate modified key across sources in incremental mode', async () => {
+    const { context, posted, messages } = setup({
+      sourceLines: [srcLine('1', { _updatedAt: now })],
+      revisions: [{ _id: 'r0', _updatedAt: '2026-09-20T00:00:00.000Z', siret: '0', code_qualification: 'c' }],
+      secondSourceLines: [srcLine('1', { nom_entreprise: 'other', _updatedAt: now })]
+    })
+    const cursor = '2026-09-21T09:00:00.000Z'
+    const ctx = context({ sourceDatasets: [{ id: 's', title: 'Source' }, { id: 's2', title: 'Source 2' }], state: { s: { cursor }, s2: { cursor } } })
+    await assert.rejects(run(ctx), /duplicate key 1\|c/)
+    assert.equal(posted.length, 0)
+    assert.ok(messages.some(m => m.level === 'info' && m.msg === 'Source: incremental'))
+    assert.ok(messages.some(m => m.level === 'info' && m.msg === 'Source 2: incremental'))
+  })
+
+  it('logs the strategy chosen for each source', async () => {
+    const { context, messages } = setup({ sourceLines: [srcLine('1')], history: [histLine('1')] })
+    await run(context())
+    assert.ok(messages.some(m => m.level === 'info' && m.msg === 'Source: full'))
   })
 
   it('does not store the cursor when stopped before writing', async () => {

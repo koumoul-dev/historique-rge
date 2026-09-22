@@ -3,7 +3,7 @@ import type { LogFunctions } from '@data-fair/lib-common-types/processings.js'
 import { iteratePages } from './data-fair.ts'
 import { lineKey } from './types.ts'
 
-type Revision = { _id: string, _updatedAt: string, _deleted?: boolean, siret: string, code_qualification: string }
+type Revision = { _id: string, _updatedAt: string, _deleted?: boolean, siret?: string, code_qualification?: string }
 
 /**
  * Walks the revisions newest first and returns the keys whose latest revision since `since` is a deletion.
@@ -25,7 +25,11 @@ export const readDeletedSince = async (axios: AxiosInstance, datasetId: string, 
       count++
       if (seen.has(revision._id)) continue
       seen.add(revision._id)
-      if (revision._deleted) deletedKeys.add(lineKey(revision))
+      if (!revision._deleted) continue
+      // data-fair only keeps the primary key fields on a deleted revision
+      const { siret, code_qualification: code } = revision
+      if (!siret || !code) throw new Error(`deleted revision without siret/code_qualification in ${datasetId}`)
+      deletedKeys.add(lineKey({ siret, code_qualification: code }))
     }
     await log.progress(taskName, count, page.total)
     if (covered || isStopped()) break

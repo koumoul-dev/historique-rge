@@ -29,7 +29,9 @@ export const run: RunFunction<ProcessingConfig> = async (context) => {
   const plans: Plan[] = []
   for (const ref of config.sourceDatasets) {
     const info = await getSourceInfo(axios, ref, log)
-    plans.push({ info, strategy: chooseStrategy(config.mode as Mode, info, state[info.id]?.cursor) })
+    const strategy = chooseStrategy(config.mode as Mode, info, state[info.id]?.cursor)
+    await log.info(`${info.title}: ${strategy}`)
+    plans.push({ info, strategy })
   }
   if (isStopped()) return
 
@@ -53,6 +55,7 @@ export const run: RunFunction<ProcessingConfig> = async (context) => {
       }
       for (const line of res.modified) {
         const key = lineKey(line)
+        if (current.has(key)) throw new Error(`duplicate key ${key} in the source datasets`)
         current.set(key, line)
         touchedKeys.add(key)
       }
