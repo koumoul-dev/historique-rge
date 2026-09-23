@@ -1,7 +1,9 @@
 name: Publish main to Staging Registry
 on:
-  push:
-    branches: [main, master]
+  # push:
+  #   branches: [main, master]
+  # this processing is never deployed on staging: manual trigger only
+  workflow_dispatch:
 
 permissions:
   contents: read
