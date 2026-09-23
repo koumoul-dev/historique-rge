@@ -41,7 +41,7 @@ const hist = (over: Partial<HistoryLine> = {}): HistoryLine => ({
 const key = '12345678900011|8611'
 const prev = (entry: PreviousState extends Map<string, infer V> ? V : never): PreviousState => new Map([[key, entry]])
 const cur = (line?: SourceLine): CurrentState => new Map(line ? [[key, line]] : [])
-const ref = (dateDebut: string) => ({ organisme: org, siret: '12345678900011', code_qualification: '8611', date_debut: dateDebut })
+const ref = (dateDebut: string) => ({ siret: '12345678900011', code_qualification: '8611', date_debut: dateDebut })
 
 describe('diff', () => {
   it('creates a line for a new key', () => {

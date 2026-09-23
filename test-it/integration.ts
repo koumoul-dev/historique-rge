@@ -45,7 +45,7 @@ const waitForFinalizeAfter = async (axios: AxiosInstance, id: string, previousFi
 const createHistory = async (axios: AxiosInstance) => (await axios.post<Dataset>('api/v1/datasets', {
   title: 'historique-rge test history',
   isRest: true,
-  primaryKey: ['organisme', 'siret', 'code_qualification', 'date_debut'],
+  primaryKey: ['siret', 'code_qualification', 'date_debut'],
   schema: historySchema
 })).data
 

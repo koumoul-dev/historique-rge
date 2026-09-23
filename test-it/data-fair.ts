@@ -56,7 +56,7 @@ describe('data-fair helpers', () => {
         return { nbOk: (body as unknown[]).length - 1, nbNotModified: 0, nbErrors: 1, errors: [{ line: 0, error: 'ligne non trouvée', status: 404 }] }
       }
     })
-    const ops = Array.from({ length: 1500 }, (_, i) => ({ _action: 'patch' as const, organisme: 'o', siret: String(i), code_qualification: 'c', date_debut: '2026-01-01', traitement_termine: true }))
+    const ops = Array.from({ length: 1500 }, (_, i) => ({ _action: 'patch' as const, siret: String(i), code_qualification: 'c', date_debut: '2026-01-01', traitement_termine: true }))
     const { log, messages } = recordingLog()
     const summary = await bulkLines(axios, 'h', ops, log, () => false)
     assert.deepEqual(bodies.map(b => b.length), [1000, 500])
@@ -71,7 +71,7 @@ describe('data-fair helpers', () => {
       }
     })
     const { log, messages } = recordingLog()
-    await assert.rejects(bulkLines(axios, 'h', [{ _action: 'delete', organisme: 'o', siret: '1', code_qualification: 'c', date_debut: '2026-01-01' }], log, () => false), /1 line\(s\) rejected/)
+    await assert.rejects(bulkLines(axios, 'h', [{ _action: 'delete', siret: '1', code_qualification: 'c', date_debut: '2026-01-01' }], log, () => false), /1 line\(s\) rejected/)
     assert.ok(messages.some(m => m.level === 'error' && m.msg.includes('doit être une chaîne')))
   })
 
@@ -82,14 +82,14 @@ describe('data-fair helpers', () => {
       }
     })
     const { log, messages } = recordingLog()
-    await assert.rejects(bulkLines(axios, 'h', [{ _action: 'delete', organisme: 'o', siret: '1', code_qualification: 'c', date_debut: '2026-01-01' }], log, () => false), /1 line\(s\) rejected/)
+    await assert.rejects(bulkLines(axios, 'h', [{ _action: 'delete', siret: '1', code_qualification: 'c', date_debut: '2026-01-01' }], log, () => false), /1 line\(s\) rejected/)
     assert.ok(messages.some(m => m.level === 'error' && m.msg.includes('doit être une chaîne')))
   })
 
   it('does not upload once stopped', async () => {
     let posted = 0
     const axios = fakeAxios({ 'POST /api/v1/datasets/h/_bulk_lines': () => { posted++; return { nbOk: 1, nbNotModified: 0, nbErrors: 0, errors: [] } } })
-    await bulkLines(axios, 'h', [{ _action: 'delete', organisme: 'o', siret: '1', code_qualification: 'c', date_debut: '2026-01-01' }], noopLog, () => true)
+    await bulkLines(axios, 'h', [{ _action: 'delete', siret: '1', code_qualification: 'c', date_debut: '2026-01-01' }], noopLog, () => true)
     assert.equal(posted, 0)
   })
 })

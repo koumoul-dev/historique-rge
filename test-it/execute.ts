@@ -9,7 +9,7 @@ import { fakeAxios, recordingLog, type FakeRoute } from './utils.ts'
 import historySchema from '../resources/schema.json' with { type: 'json' }
 
 const J = today()
-const pk = ['organisme', 'siret', 'code_qualification', 'date_debut']
+const pk = ['siret', 'code_qualification', 'date_debut']
 const now = '2026-09-21T10:00:00.000Z'
 
 const srcLine = (siret: string, over: Record<string, unknown> = {}) => ({ siret, code_qualification: 'c', nom_entreprise: 'N' + siret, lien_date_debut: '2025-01-01', lien_date_fin: '2027-01-01', ...over })
@@ -128,6 +128,6 @@ describe('execute', () => {
   it('processes today lines consistently: a line opened today and gone is deleted', async () => {
     const { context, posted } = setup({ sourceLines: [], history: [histLine('1', { date_debut: J })] })
     await run(context())
-    assert.deepEqual(posted[0], [{ _action: 'delete', organisme: 'qualibat', siret: '1', code_qualification: 'c', date_debut: J }])
+    assert.deepEqual(posted[0], [{ _action: 'delete', siret: '1', code_qualification: 'c', date_debut: J }])
   })
 })

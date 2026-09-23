@@ -31,7 +31,7 @@ data-fair (RGE companies, foreign companies).
   Fields are compared as text, `undefined`, `null`, `''` and `false` all counting as empty
   (like the legacy flow); `latitude` and `longitude` are compared by numeric value.
 - **Write**: `_bulk_lines` on the history, chunks of 1000, addressed by the primary key
-  `organisme, siret, code_qualification, date_debut`. Every operation is idempotent; the run
+  `siret, code_qualification, date_debut`. Every operation is idempotent; the run
   fails if a line is rejected and the cursor is not advanced. A 404 on a patch or a delete
   means the line was already handled by a previous run (e.g. a retried webhook): it is logged
   as a warning, not a failure.
@@ -52,7 +52,7 @@ integers and leading zeros are lost.
 Cut-over from the daily `ademe-rge` flow, in this order:
 
 1. Create the new history dataset once (editable, the 24 columns of `resources/schema.json`,
-   primary key `organisme, siret, code_qualification, date_debut`), backfill it from the old
+   primary key `siret, code_qualification, date_debut`), backfill it from the old
    history dataset, then switch the slug to the new one. Every backfilled line must carry
    `traitement_termine` (`false` for a current line, `true` for a closed one): a line without
    it is invisible to the `traitement_termine_eq=false` query and would stay open forever.

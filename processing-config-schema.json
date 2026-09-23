@@ -12,8 +12,8 @@
           "type": "object",
           "title": "History dataset",
           "x-i18n-title": { "fr": "Jeu de données historique" },
-          "description": "The editable dataset \"Historique des entreprises RGE\", created beforehand with the primary key organisme, siret, code_qualification, date_debut.",
-          "x-i18n-description": { "fr": "Le jeu de données éditable « Historique des entreprises RGE », créé au préalable avec la clé primaire organisme, siret, code_qualification, date_debut." },
+          "description": "The editable dataset \"Historique des entreprises RGE\", created beforehand with the primary key siret, code_qualification, date_debut.",
+          "x-i18n-description": { "fr": "Le jeu de données éditable « Historique des entreprises RGE », créé au préalable avec la clé primaire siret, code_qualification, date_debut." },
           "layout": {
             "getItems": {
               "url": "${context.dataFairUrl}/api/v1/datasets?select=id,title&size=50&${context.ownerFilter}&raw=true",

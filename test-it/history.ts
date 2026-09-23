@@ -4,7 +4,7 @@ import { checkHistoryDataset, readHistoryState, countCurrentLines, historyKeys }
 import { fakeAxios, noopLog } from './utils.ts'
 import schema from '../resources/schema.json' with { type: 'json' }
 
-const pk = ['organisme', 'siret', 'code_qualification', 'date_debut']
+const pk = ['siret', 'code_qualification', 'date_debut']
 const dataset = (over: Record<string, unknown> = {}) => ({ id: 'h', title: 'History', isRest: true, schema, primaryKey: pk, dataUpdatedAt: '2026-09-21T10:00:00.000Z', finalizedAt: '2026-09-21T10:00:00.000Z', ...over })
 
 describe('history', () => {
