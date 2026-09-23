@@ -1,6 +1,6 @@
 {
   "name": "@koumoul/historique-rge",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "data-fair processing: keeps the RGE companies history dataset in sync with the datasets of one qualification organism",
   "main": "index.ts",
   "type": "module",
