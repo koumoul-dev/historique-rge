@@ -125,6 +125,18 @@ describe('execute', () => {
     assert.equal(patches.length, 0)
   })
 
+  it('synchronises a file source whose upload dropped an optional column, emptying it in the history', async () => {
+    const { context, posted, messages } = setup({
+      source: { isRest: false, rest: undefined, file: { name: 'rge.csv' }, schema: sourceKeys.filter(k => k !== 'email').map(key => ({ key })) },
+      sourceLines: [srcLine('1')],
+      history: [histLine('1', { date_debut: J, email: 'a@one.fr' })]
+    })
+    await run(context({ state: { s: { cursor: '2026-09-21T09:00:00.000Z' } } }))
+    assert.ok(messages.some(m => m.level === 'warning' && m.msg.includes('optional column')))
+    assert.ok(messages.some(m => m.level === 'info' && m.msg === 'Source: full'))
+    assert.deepEqual((posted[0] as { _action: string, siret: string, email?: unknown }[]).map(op => [op._action, op.siret, op.email]), [['patch', '1', null]])
+  })
+
   it('processes today lines consistently: a line opened today and gone is deleted', async () => {
     const { context, posted } = setup({ sourceLines: [], history: [histLine('1', { date_debut: J })] })
     await run(context())

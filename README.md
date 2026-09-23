@@ -73,10 +73,8 @@ Processings refuses a trigger while a run is in progress; the events service ret
 npm install
 npm run build-types   # after every change of processing-config-schema.json
 npm run lint
-npm test              # unit tests; test-it/integration.ts needs config/local-test.mjs
+npm test              # data-fair is faked (test-it/utils.ts), no instance needed
 ```
-
-`config/local-test.mjs` (gitignored) mirrors `config/default.mjs` with a data-fair URL and API key.
 
 ## Release
 
