@@ -45,6 +45,7 @@
           "items": {
             "type": "object",
             "title": "Source dataset",
+            "x-i18n-title": { "fr": "Jeu de données source" },
             "layout": {
               "getItems": {
                 "url": "${context.dataFairUrl}/api/v1/datasets?select=id,title&size=50&${context.ownerFilter}&raw=true",
